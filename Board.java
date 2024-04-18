@@ -1,11 +1,9 @@
+package CSAFinalProject;
+
 public class Board {
-	private int[][] board = new int[6][7];
-	public Board() {
-		for(int[] i:board) {
-			for(int x: i) {
-				x=0;
-			}
-		}
+	private int[][] board;
+	public Board(int row, int col) {
+		board = new int[row][col];
 	}
 	
 	//FOR TESTING PURPOSES ONLY TEMPORARY
@@ -29,7 +27,7 @@ public class Board {
 	 * @return - True if a piece was successfully dropped, false otherwise
 	 */
 	public boolean dropPiece(int player, int column) {
-		for(int i=5;i>=0;i--) {
+		for(int i = board.length - 1; i>=0;i--) {
 			if(board[i][column]==0) {
 				board[i][column]=player;
 				return true;
@@ -37,5 +35,4 @@ public class Board {
 		}
 		return false;
 	}
-	
 }
