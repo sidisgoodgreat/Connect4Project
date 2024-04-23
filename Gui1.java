@@ -133,13 +133,11 @@ public class Gui1 extends JFrame implements ActionListener {
 	  }
 	public void whoWon (String you, String com)
 	  {
-	    boolean youWon = true;
-	    
 	    if (you.equals (com))
 	      l4.setText ("It's a draw.");
-	    else if(youWon)
+	    else if((you.equals(s) && com.equals(p)) || (you.equals(p) && com.equals(r)) || (you.equals(r) && com.equals(s)))
 	    	 l4.setText ("You won.");
-	    else
+	    else if((com.equals(s) && you.equals(p)) || (com.equals(p) && you.equals(r)) || (com.equals(r) && you.equals(s)))
 	    	 l4.setText ("The computer won.");
 
 	  }
