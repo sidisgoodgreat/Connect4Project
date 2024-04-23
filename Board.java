@@ -35,36 +35,43 @@ public class Board {
 		}
 		return false;
 	}
-	public int cardinalWin() {
-		//First checking horizontal wins(4 in a horizontal line)
-		for(int i=0;i<=5;i++) {//Going Row by Row
-			for(int j=0;j<=3;j++) {//first 3 columns only
-				if(cardinalCheck(i,j,true)) {
-					return board[i][j];
+	public int winCheckAll() {
+		for(int i=1;i<=4;i++) {
+			int winNum=winCheck(i);
+			if(winNum!=-1) {
+				return winNum;
+			}
+		}
+		return -1;
+	}
+	public int winCheck(int id) {
+		/*
+		 * 1: Horizontal
+		 * 2: Vertical
+		 * 3: BL Diagonal
+		 * 4: BR Diagonal
+		 */
+		//Based on the ID given(seen above), will set the for-loops to the correct parameter
+		int outer1=(id==1)?0:3,outer2=5,
+			inner1=(id==4)?3:0,inner2=(id==2||id==4)?6:3;
+		for(int i=outer1;i<=outer2;i++) {
+			for(int j=inner1;j<=inner2;j++) {
+				int value=board[i][j];
+				if(value!=0&&recWin(i,j,value,0,id)) {
+					return value;
 				}
 			}
 		}
-		//If no Horizontals are found, searching for vertical wins
-		for(int i=5;i>=3;i--) {//Row
-			for(int j=6;j>=0;j--) {//Column
-				if(cardinalCheck(i,j,false)) {
-					return board[i][j];
-				}
-			}
-		}
-		return -1;//In the event no win is found, returns -1
+		return -1;
 	}
-	private boolean cardinalCheck(int row, int column,boolean isHoz) {
-		int value=board[row][column];
-		return(value!=0&&recCardinal(row,column,value,0,isHoz));
-	}
-	private boolean recCardinal(int row, int column, int value,int count,boolean isHoz) {
+	private boolean recWin(int row, int column, int value, int count,int id) {
 		if(count==4) {
 			return true;
-		}else if(board[row][column]==value) {
-			boolean val = isHoz?recCardinal(row,column+1,value,count+1,isHoz):
-									recCardinal(row-1,column,value,count+1,isHoz);
-			return val;
+		}else if(board[row][column]==value){
+			//Based on the same ID, each win requires to check a different direction
+			int rowAdd=(id==1)?0:-1,
+				columnAdd=(id==1||id==3)?1:(id==2)?0:-1;
+			return recWin((row+rowAdd),(column+columnAdd),value,count+1,id);
 		}else {
 			return false;
 		}
