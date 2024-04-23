@@ -1,9 +1,13 @@
 package CSAFinalProject;
 
 public class Board {
-	private int[][] board;
-	public Board(int row, int col) {
-		board = new int[row][col];
+	private int[][] board=new Board[6][7];//Since all Connect 4 boards are the same size, create the variable with the same parameters
+	public Board() {
+		for(int[] b:board){//Assigns each space on the connect 4 a "0", which represents a blank space in the program
+			for(int i:b){
+				i=0;
+			}
+		}
 	}
 	
 	//FOR TESTING PURPOSES ONLY TEMPORARY
