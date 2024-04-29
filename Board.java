@@ -12,6 +12,9 @@ public class Board {
 	//FOR TESTING PURPOSES ONLY TEMPORARY
 	//FOR TESTING PURPOSES ONLY TEMPORARY
 	//FOR TESTING PURPOSES ONLY TEMPORARY
+	/* 
+ 	// For Loop for each value in the array board to be printed out.
+  	*/
 	public void print() {
 		for(int[] i:board) {
 			System.out.println();
@@ -38,6 +41,10 @@ public class Board {
 		}
 		return false;
 	}
+	/**
+	 * @return - return -1 if there is no winning number 
+  	 * @return winNum if number is found in the for loop
+	 */
 	public int winCheckAll() {
 		for(int i=1;i<=4;i++) {
 			int winNum=winCheck(i);
@@ -47,6 +54,11 @@ public class Board {
 		}
 		return -1;
 	}
+	/**
+	 * @return - return -1 if there is no value 
+  	 * @return winNum if number is found in the 2d array 
+    	 * @param is ID to identify the correct value
+	 */
 	public int winCheck(int id) {
 		/*
 		 * 1: Horizontal
@@ -67,6 +79,13 @@ public class Board {
 		}
 		return -1;
 	}
+	/**
+	 * @return - return false if there is no value 
+  	 * @return true if value is found in the 2d array 
+    	 * @param row for which row the ID is in
+      	 * @param column for which column each ID is in
+	 * @param count for how many times ID is found
+	 */
 	private boolean recWin(int row, int column, int value, int count,int id) {
 		if(count==4) {
 			return true;
