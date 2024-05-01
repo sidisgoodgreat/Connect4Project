@@ -1,4 +1,4 @@
-package csaFinal;
+package CSAFinalProject;
 
 import java.awt.Color;
 
