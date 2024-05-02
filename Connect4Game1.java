@@ -31,6 +31,7 @@ public class Connect4Game1 {
 	private JButton Restart;
 	private boolean p1Turn = false;
 	private boolean p2Turn = false;
+	private int whoStarts = (int) (Math.random() * 2);
 	
 
 	/**
@@ -66,6 +67,12 @@ public class Connect4Game1 {
 			}
 			y+=65;
 		}
+		if(whoStarts == 0) {
+			P2.setVisible(false);
+		}
+		else if(whoStarts == 1) {
+			P1.setVisible(false);
+		}
 	}
 
 	/**
@@ -82,11 +89,13 @@ public class Connect4Game1 {
 		placePiece.setFont(new Font("Tahoma", Font.BOLD, 11));
 		placePiece.setBackground(new Color(0, 255, 128));
 		placePiece.addActionListener(new ActionListener() {
+		
 			public void actionPerformed(ActionEvent e) {
 				Restart.setVisible(false); 
 				int rowNum = 0;
 				if(!isWin) {
 					try {
+						whoStarts = -1;
 						//ButtonGroup bG = new ButtonGroup();
 						int radioButtonToInt = 0;
 						String col = Column.getText();
@@ -97,8 +106,18 @@ public class Connect4Game1 {
 							if((colStrToInt >= 0 && colStrToInt < b.getCols())) {
 								isError.setText("");
 								rowNum = b.dropPiece(radioButtonToInt, colStrToInt);
-								if(radioButtonToInt == 1) buttons[rowNum][colStrToInt].setBackground(Color.RED);
-								else buttons[rowNum][colStrToInt].setBackground(Color.ORANGE);
+								if(radioButtonToInt == 1) {
+									p2Turn = false;
+									p1Turn = true;
+									buttons[rowNum][colStrToInt].setBackground(Color.RED);
+									buttons[rowNum][colStrToInt].setOpaque(true);
+								}
+								else if(radioButtonToInt == 2){
+									p1Turn = false;
+									p2Turn = true;
+									buttons[rowNum][colStrToInt].setBackground(Color.ORANGE);
+									buttons[rowNum][colStrToInt].setOpaque(true);
+								}
 								
 								JOptionPane.showMessageDialog(null,  "Player " + radioButtonToInt + " dropped a piece in column " + col);
 								if(b.winCheckAll() > 0) {
@@ -120,7 +139,18 @@ public class Connect4Game1 {
 								JOptionPane.showMessageDialog(null,  "Please enter a valid column number, with the max being 6!");
 								isError.setText("ERROR!");
 							}
+							if(p1Turn && colStrToInt >= 0 && colStrToInt <= 6) {
+								P1.setVisible(false);
+								P2.setVisible(true);
+							}
+							
+							else if(p2Turn && colStrToInt >= 0 && colStrToInt <= 6) {
+								P2.setVisible(false);
+								P1.setVisible(true);
+							}
 						}
+						
+						
 						else {
 							JOptionPane.showMessageDialog(null,  "Please choose your player number, either 1 or 2!");
 							isError.setText("ERROR!");
@@ -134,6 +164,7 @@ public class Connect4Game1 {
 				}
 				P1.setSelected(false);
 				P2.setSelected(false);
+				Column.setText("");
 				
 			}
 		});
@@ -199,6 +230,11 @@ public class Connect4Game1 {
 				winStatus.setBackground(Color.WHITE);
 				b.clear();
 				isWin = false;
+				p1Turn = false;
+				p2Turn = false;
+				P1.setVisible(true);
+				P2.setVisible(true);
+				whoStarts = (int)(Math.random() * 2) + 1;
 				
 			}
 		});
