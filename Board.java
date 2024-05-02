@@ -9,6 +9,12 @@ public class Board {
 		board=new int[6][7];
 	}
 	
+	public int getRows() {
+		return board.length;
+	}
+	public int getCols() {
+		return board[0].length;
+	}
 	//FOR TESTING PURPOSES ONLY TEMPORARY
 	//FOR TESTING PURPOSES ONLY TEMPORARY
 	//FOR TESTING PURPOSES ONLY TEMPORARY
@@ -20,6 +26,23 @@ public class Board {
 			}
 		}
 	}
+	public void clear() { //clears the board and is only called upon a win
+		for(int r = 0; r < board.length; r++) {
+			for(int c = 0; c < board[0].length; c++) {
+				board[r][c] = 0;
+			}
+		}
+	}
+	public String printStr() {
+		String tmp = "";
+		for(int[] i:board) {
+			for(int x: i) {
+				tmp += (x+" ");
+			}
+			tmp += "\n";
+		}
+		return tmp;
+	}
 	//FOR TESTING PURPOSES ONLY TEMPORARY
 	//FOR TESTING PURPOSES ONLY TEMPORARY
 	//FOR TESTING PURPOSES ONLY TEMPORARY
@@ -29,14 +52,14 @@ public class Board {
 	 * @param column - the column the piece is being placed
 	 * @return - True if a piece was successfully dropped, false otherwise
 	 */
-	public boolean dropPiece(int player, int column) {
+	public int dropPiece(int player, int column) {
 		for(int i = board.length - 1; i>=0;i--) {
 			if(board[i][column]==0) {
 				board[i][column]=player;
-				return true;
+				return i;
 			}
 		}
-		return false;
+		return -1;
 	}
 	public int winCheckAll() {
 		for(int i=1;i<=4;i++) {
