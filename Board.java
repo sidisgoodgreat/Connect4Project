@@ -48,6 +48,10 @@ public class Board {
 		}
 		return false;
 	}
+	/**
+ 	*Checks for win across entire board by calling winCheck method for all possible directons. 
+  	*Returns winNum if there is a win or else returns -1.
+   	*/
 	public int winCheckAll() {
 		for(int i=1;i<=4;i++) {
 			int winNum=winCheck(i);
