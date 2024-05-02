@@ -2,7 +2,6 @@ package CSAFinalProject;
 
 import java.awt.EventQueue;
 import java.util.*;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
@@ -30,6 +29,8 @@ public class Connect4Game1 {
 	private JRadioButton P1;
 	private JRadioButton P2;
 	private JButton Restart;
+	private boolean p1Turn = false;
+	private boolean p2Turn = false;
 	
 
 	/**
@@ -90,7 +91,7 @@ public class Connect4Game1 {
 						int radioButtonToInt = 0;
 						String col = Column.getText();
 						int colStrToInt = Integer.valueOf(col);
-						if((P1.isSelected() || P2.isSelected())) {
+						if((P1.isSelected() || P2.isSelected()) && (!(P1.isSelected() && P2.isSelected()))) {
 							if(P1.isSelected()) radioButtonToInt = 1;
 							else if(P2.isSelected()) radioButtonToInt = 2;
 							if((colStrToInt >= 0 && colStrToInt < b.getCols())) {
