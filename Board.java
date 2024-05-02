@@ -9,6 +9,9 @@ public class Board {
 	public Board(int row, int col) {
 		board=new int[row][col];
 	}
+	/**
+ 	*Creates board object with the default board size of 6 rows and 7 columns
+  	*/
 	public Board(){
 		board=new int[6][7];
 	}
@@ -16,6 +19,9 @@ public class Board {
 	//FOR TESTING PURPOSES ONLY TEMPORARY
 	//FOR TESTING PURPOSES ONLY TEMPORARY
 	//FOR TESTING PURPOSES ONLY TEMPORARY
+	/**
+ 	*Iterates over each row of board and prints elements of each row
+  	*/
 	public void print() {
 		for(int[] i:board) {
 			System.out.println();
