@@ -1,7 +1,11 @@
 package CSAFinalProject;
 
+
 public class Board {
 	private int[][] board;
+	/**
+ 	*Creates board object with specified rows and columns
+  	*/
 	public Board(int row, int col) {
 		board=new int[row][col];
 	}
