@@ -20,17 +20,16 @@ import javax.swing.JToggleButton;
 public class GUIBoard2 {
 
 	private JFrame frame;
-	private JTextField Column,
-						isError;
+	private JTextField 	column,
+						status;
 	private Board b = new Board();
-	private JTextField winStatus;
 	private boolean isWin = false;
-	private JLabel Header;
 	private JLabel[][] displayBoard = new JLabel[6][7];
-	private JButton Restart, placePiece;
-	private JToggleButton playerToggle = new JToggleButton("isPlayer1");
-	private JLabel label2 = new JLabel("Enter Column Number:"),
-			Label1 = new JLabel("Choose the player:");
+	private JButton restart, placePiece;
+	private JToggleButton playerToggle = new JToggleButton();
+	private JLabel 	header,
+					columnLabel = new JLabel("Enter column Number:"),
+					playerLabel = new JLabel("Choose the player:");
 	
 	//TEMP
 	Player p1 = new Player(Color.red,1);
@@ -65,34 +64,29 @@ public class GUIBoard2 {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		Column = new JTextField();
-		Column.setBounds(562, 98, 126, 49);
-		frame.getContentPane().add(Column);
-		Column.setColumns(10);
+		column = new JTextField();
+		column.setBounds(562, 98, 126, 49);
+		frame.getContentPane().add(column);
+		column.setColumns(10);
 		
-		isError = new JTextField();
-		isError.setBounds(350, 143, 110, 38);
-		frame.getContentPane().add(isError);
-		isError.setColumns(10);
+		status = new JTextField();
+		status.setFont(new Font("Tahoma", Font.BOLD, 12));
+		status.setBounds(249, 634, 298, 91);
+		frame.getContentPane().add(status);
+		status.setColumns(10);
 		
-		winStatus = new JTextField();
-		winStatus.setFont(new Font("Tahoma", Font.BOLD, 12));
-		winStatus.setBounds(249, 634, 298, 91);				
-		frame.getContentPane().add(winStatus);
-		winStatus.setColumns(10);
-		
-		Label1.setFont(new Font("Tahoma", Font.BOLD, 11));
-		Label1.setBounds(91, 61, 126, 38);
-		frame.getContentPane().add(Label1);
+		columnLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
+		columnLabel.setBounds(91, 61, 126, 38);
+		frame.getContentPane().add(columnLabel);
 	
-		label2.setFont(new Font("Tahoma", Font.BOLD, 11));
-		label2.setBounds(563, 56, 136, 49);
-		frame.getContentPane().add(label2);
+		playerLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
+		playerLabel.setBounds(563, 56, 136, 49);
+		frame.getContentPane().add(playerLabel);
 		
-		Header = new JLabel("Connect 4!");
-		Header.setFont(new Font("Tahoma", Font.BOLD, 40));
-		Header.setBounds(288, 11, 266, 68);
-		frame.getContentPane().add(Header);
+		header = new JLabel("Connect 4!");
+		header.setFont(new Font("Tahoma", Font.BOLD, 40));
+		header.setBounds(288, 11, 266, 68);
+		frame.getContentPane().add(header);
 		
 		placePiece = new JButton("Place Piece");
 		placePiece.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -100,10 +94,10 @@ public class GUIBoard2 {
 		placePiece.setBounds(302, 211, 200, 30);
 		frame.getContentPane().add(placePiece);
 		
-		Restart = new JButton("Restart Game");
-		Restart.setBackground(Color.RED);
-		Restart.setBounds(302, 212, 200, 29);
-		frame.getContentPane().add(Restart);
+		restart = new JButton("restart Game");
+		restart.setBackground(Color.RED);
+		restart.setBounds(302, 212, 200, 29);
+		frame.getContentPane().add(restart);
 		
 		playerToggle.setSelected(true);
 		playerToggle.setBounds(62, 98, 161, 29);
@@ -111,7 +105,7 @@ public class GUIBoard2 {
 		
 		
 		//Creating and setting the board
-		int x = 150,
+		int x,
 			y = 252;
 		for(int r = 0; r < displayBoard.length; r++) {
 			x = 150;
@@ -127,15 +121,15 @@ public class GUIBoard2 {
 		}
 		//Flipping a coin to see who goes first
 		updatePlayerToggle(coinFlip());
-		
 		initialize();
 		
 	}
 	
 	private boolean coinFlip() {
-		return (int)Math.random()+1==1;
+		return (int)Math.random()*2==1;
 	}
-	public void updateBoard(Player p1, Player p2) {
+	
+	private void updateBoard(Player p1, Player p2) {
 		for(int row=0;row<b.getBoard().length;row++) {
 			for(int column=0;column<b.getBoard()[0].length;column++) {
 				int point = b.getBoard()[row][column];
@@ -145,7 +139,7 @@ public class GUIBoard2 {
 			}
 		}
 	}
-	public void updatePlayerToggle(boolean init) {
+	private void updatePlayerToggle(boolean init) {
 		playerToggle.setSelected(init);
 		playerToggle.setText((init?"Player 1":"Player 2"));
 	}
@@ -156,10 +150,10 @@ public class GUIBoard2 {
 	private void winCheck() {
 		if(b.winCheckAll() > 0) {
 			//color set:
-			winStatus.setBackground(Color.GREEN);
-			winStatus.setText("Player " + (playerToggle.isSelected()?1:2) + " scored a WIN!");
+			status.setBackground(Color.GREEN);
+			status.setText("Player " + (playerToggle.isSelected()?1:2) + " scored a WIN!");
 			placePiece.setVisible(false);
-			Restart.setVisible(true);
+			restart.setVisible(true);
 			isWin = true;
 		}
 	}
@@ -167,13 +161,13 @@ public class GUIBoard2 {
 		placePiece.addActionListener(new ActionListener() {
 		
 			public void actionPerformed(ActionEvent e) {
-				Restart.setVisible(false); 
+				restart.setVisible(false); 
 				if(!isWin) {
 					try {
-						String col = Column.getText();
-						int colStrToInt = Integer.valueOf(col);
-						isError.setText("");
-						b.dropPiece(playerToggle.isSelected()?1:2, colStrToInt);
+						status.setText("");
+						status.setBackground(Color.white);
+						b.dropPiece(playerToggle.isSelected()?1:2, 
+								Integer.valueOf(column.getText()));
 								
 						updateBoard(p1,p2);
 				
@@ -183,20 +177,19 @@ public class GUIBoard2 {
 						winCheck();
 						
 					}catch(Exception a) {
-						isError.setText("ERROR!");
+						status.setText("ERROR!");
+						status.setBackground(Color.red);
 					}
 				}
-				Column.setText("");
-				
+				column.setText("");
 			}
 		});
-		Restart.addActionListener(new ActionListener() {
+		restart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Restart.setVisible(false);
+				restart.setVisible(false);
 				placePiece.setVisible(true);
-				Column.setText("");
-				winStatus.setText("");
-				winStatus.setBackground(Color.WHITE);
+				status.setText("");
+				status.setBackground(Color.WHITE);
 				
 				b.clearBoard();
 				updateBoard(p1,p2);
