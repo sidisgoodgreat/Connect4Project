@@ -1,21 +1,8 @@
-package CSAFinalProject;
+package csaFinal;
 
-import java.awt.EventQueue;
-import java.util.*;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.Color;
-import javax.swing.JTextField;
-import javax.swing.JTextArea;
-import java.awt.Font;
-import javax.swing.JRadioButton;
-import javax.swing.JLabel;
-import java.awt.Button;
-import javax.swing.ButtonGroup;
-import javax.swing.JToggleButton;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 public class GUIBoard2 {
 
@@ -37,74 +24,11 @@ public class GUIBoard2 {
 	//TEMP
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GUIBoard2 window = new GUIBoard2();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the application.
 	 */
-	public GUIBoard2() {
-		
-		//Initializing and giving traits to the display features
-		frame = new JFrame();
-		frame.getContentPane().setFont(new Font("Segoe UI Black", Font.BOLD, 11));
-		frame.setBounds(800, 800, 800, 800);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-		
-		column = new JTextField();
-		column.setBounds(562, 98, 126, 49);
-		frame.getContentPane().add(column);
-		column.setColumns(10);
-		
-		status = new JTextField();
-		status.setFont(new Font("Tahoma", Font.BOLD, 12));
-		status.setBounds(249, 634, 298, 91);
-		frame.getContentPane().add(status);
-		status.setColumns(10);
-		
-		columnLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
-		columnLabel.setBounds(91, 61, 126, 38);
-		frame.getContentPane().add(columnLabel);
-	
-		playerLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
-		playerLabel.setBounds(563, 56, 136, 49);
-		frame.getContentPane().add(playerLabel);
-		
-		header = new JLabel("Connect 4!");
-		header.setFont(new Font("Tahoma", Font.BOLD, 40));
-		header.setBounds(288, 11, 266, 68);
-		frame.getContentPane().add(header);
-		
-		placePiece = new JButton("Place Piece");
-		placePiece.setFont(new Font("Tahoma", Font.BOLD, 11));
-		placePiece.setBackground(new Color(0, 255, 128));
-		placePiece.setBounds(302, 211, 200, 30);
-		frame.getContentPane().add(placePiece);
-		
-		restart = new JButton("restart Game");
-		restart.setBackground(Color.RED);
-		restart.setBounds(302, 212, 200, 29);
-		frame.getContentPane().add(restart);
-		
-		playerToggle.setSelected(true);
-		playerToggle.setBounds(62, 98, 161, 29);
-		frame.getContentPane().add(playerToggle);
-		
-		
+	public GUIBoard2(Player p1, Player p2) {
 		//Creating and setting the board
+		setup();
 		int x,
 			y = 252;
 		for(int r = 0; r < displayBoard.length; r++) {
@@ -123,6 +47,60 @@ public class GUIBoard2 {
 		updatePlayerToggle(coinFlip());
 		initialize();
 		
+		this.p1=p1;
+		this.p2=p2;
+		
+		frame.setVisible(true);
+		
+	}
+	
+	private void setup() {
+		//Initializing and giving traits to the display features
+				frame = new JFrame();
+				frame.getContentPane().setFont(new Font("Segoe UI Black", Font.BOLD, 11));
+				frame.setBounds(800, 800, 800, 800);
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frame.getContentPane().setLayout(null);
+				
+				column = new JTextField();
+				column.setBounds(562, 98, 126, 49);
+				frame.getContentPane().add(column);
+				column.setColumns(10);
+				
+				status = new JTextField();
+				status.setFont(new Font("Tahoma", Font.BOLD, 12));
+				status.setBounds(249, 634, 298, 91);
+				frame.getContentPane().add(status);
+				status.setColumns(10);
+				
+				columnLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
+				columnLabel.setBounds(91, 61, 126, 38);
+				frame.getContentPane().add(columnLabel);
+			
+				playerLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
+				playerLabel.setBounds(563, 56, 136, 49);
+				frame.getContentPane().add(playerLabel);
+				
+				header = new JLabel("Connect 4!");
+				header.setFont(new Font("Tahoma", Font.BOLD, 40));
+				header.setBounds(288, 11, 266, 68);
+				frame.getContentPane().add(header);
+				
+				placePiece = new JButton("Place Piece");
+				placePiece.setFont(new Font("Tahoma", Font.BOLD, 11));
+				placePiece.setBackground(new Color(0, 255, 128));
+				placePiece.setBounds(302, 211, 200, 30);
+				frame.getContentPane().add(placePiece);
+				
+				restart = new JButton("Restart Game");
+				restart.setFont(new Font("Tahoma", Font.BOLD, 11));
+				restart.setBackground(Color.RED);
+				restart.setBounds(302, 212, 200, 29);
+				frame.getContentPane().add(restart);
+				
+				playerToggle.setSelected(true);
+				playerToggle.setBounds(62, 98, 161, 29);
+				frame.getContentPane().add(playerToggle);
 	}
 	
 	private boolean coinFlip() {
