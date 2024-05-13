@@ -28,7 +28,6 @@ public class GUIBoard1 implements ActionListener{
 	private JButton restart, placePiece;
 	private JToggleButton playerToggle = new JToggleButton();
 	private JLabel 	header,
-					columnLabel = new JLabel("Enter column Number:"),
 					playerLabel = new JLabel("Choose the boxes at the top row to drop a piece!");
 	private JButton[] buttons = new JButton[7];
 	//TEMP
@@ -72,6 +71,7 @@ public class GUIBoard1 implements ActionListener{
 		createDisplay();
 	}
 	public void createDisplay() {
+		
 		frame = new JFrame();
 		frame.getContentPane().setFont(new Font("Segoe UI Black", Font.BOLD, 11));
 		frame.setBounds(800, 800, 800, 800);
@@ -83,10 +83,6 @@ public class GUIBoard1 implements ActionListener{
 		status.setBounds(249, 634, 298, 91);
 		frame.getContentPane().add(status);
 		status.setColumns(10);
-		
-		columnLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
-		columnLabel.setBounds(91, 61, 126, 38);
-		frame.getContentPane().add(columnLabel);
 	
 		playerLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
 		playerLabel.setBounds(513, 32, 298, 96);
@@ -100,7 +96,11 @@ public class GUIBoard1 implements ActionListener{
 		placePiece = new JButton("Start Game");
 		placePiece.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				for(int i = 0; i < buttons.length; i++) {
+					buttons[i].setVisible(true);
+				}
+				placePiece.setVisible(false);
+				restart.setVisible(false);
 			}
 		});
 		placePiece.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -145,6 +145,9 @@ public class GUIBoard1 implements ActionListener{
 				buttons[i].addActionListener(this);
 			}
 			y1+=65;
+			for(int i = 0; i < buttons.length; i++) {
+				buttons[i].setVisible(false);
+			}
 		
 		//Flipping a coin to see who goes first
 		updatePlayerToggle(coinFlip());
@@ -179,9 +182,12 @@ public class GUIBoard1 implements ActionListener{
 			//color set:
 			status.setBackground(Color.GREEN);
 			status.setText("Player " + (!playerToggle.isSelected()?1:2) + " scored a WIN!");
-			//placePiece.setVisible(false);
+			placePiece.setVisible(false);
 			restart.setVisible(true);
 			isWin = true;
+			for(int i = 0; i < buttons.length; i++) {
+				buttons[i].setVisible(false);
+			}
 		}
 	}
 	
@@ -199,8 +205,7 @@ public class GUIBoard1 implements ActionListener{
 	private void initialize() {
 		restart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				restart.setVisible(false);
-				//placePiece.setVisible(true);
+				
 				status.setText("");
 				status.setBackground(Color.WHITE);
 				
@@ -209,6 +214,10 @@ public class GUIBoard1 implements ActionListener{
 				
 				isWin = false;
 				updatePlayerToggle(coinFlip());
+				restart.setVisible(false);
+				for(int i = 0; i < buttons.length; i++) {
+					buttons[i].setVisible(true);
+				}
 			}
 		});
 		playerToggle.addActionListener(new ActionListener(){
