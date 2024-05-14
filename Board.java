@@ -61,6 +61,9 @@ public class Board {
 		}
 		return -1;
 	}
+	/**
+ 	*Checks for a win in a specific direction on the board
+  	*/
 	public int winCheck(int id) {
 		/*
 		 * 1: Horizontal
@@ -81,6 +84,9 @@ public class Board {
 		}
 		return -1;
 	}
+	/** 
+	*Helper method where winCheck checks for a win recursively in a specified direction
+	*/
 	private boolean recWin(int row, int column, int value, int count,int id) {
 		if(count==4) {
 			return true;
