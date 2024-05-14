@@ -23,6 +23,7 @@ public class ColorChoice {
 	}
 	/**
 	 * @wbp.parser.entryPoint
+  	* Initializes the GUI for choosing player colors
 	 */
 	public void initialize() {
 		frame = new JFrame();
@@ -50,12 +51,24 @@ public class ColorChoice {
 		frame.setBounds(400,400,450,600);
 		frame.setVisible(true);
 	}
+	/**
+        * Gets the color chosen by Player 1 from slider values
+        * @return The color chosen by Player 1
+        */
 	public Color getP1Color() {
 		return new Color(p1RSlider.getValue(),p1GSlider.getValue(),p1BSlider.getValue());
 	}
+	/**
+        * Gets the color chosen by Player 2 from slider values
+        * @return The color chosen by Player 2
+        */
 	public Color getP2Color() {
 		return new Color(p2RSlider.getValue(),p2GSlider.getValue(),p2BSlider.getValue());
 	}
+	/**
+	* Creates sliders for Red, Green, Blue components of Player 1 to choose their colors
+ 	*Sets up listeners to update color preview
+	*/
 	private void p1Sliders() {
 		p1RSlider = new JSlider();
 		p1GSlider = new JSlider();
@@ -104,6 +117,10 @@ public class ColorChoice {
 		
 		
 	}
+	/**
+	* Creates sliders for Red, Green, Blue components of Player 2 to choose their colors
+ 	*Sets up listeners to update color preview
+	*/
 	private void p2Sliders() {
 		p2RSlider = new JSlider();
 		p2GSlider = new JSlider();
