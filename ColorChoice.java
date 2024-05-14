@@ -37,6 +37,13 @@ public class ColorChoice {
 
     //This right here, when the submit button is pressed, the GUIBoard(otherwise the game) is started up
 		submitButton.addActionListener(new ActionListener() {
+			/**
+			 * Performs an action when an event is triggered
+			 * Hides the current frame and creates Player objects with
+			 * colors obtained from user selections, and initializes a new instance of the
+			 * GUIBoard1 class with the specified players.
+			 * @param e 
+			 */
 			public void actionPerformed(ActionEvent e) {
 				frame.setVisible(false);
 				Player	p1 = new Player(getP1Color(),1),
