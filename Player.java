@@ -11,24 +11,34 @@ public class Player {
 	private Color playerCol;
 	private int id;
 
-	//constructor initializes id and the color	
+	/** Constructor initializes id and the color
+	*
+	*/
 	public Player(Color c, int id) {
 		this.id=id;
 		this.playerCol=c;
 	}
-	//increments wins by 1 if player wins
+	/**
+	*Increments wins by 1 if player wins
+	*/
 	public void incWin() {
 		wins++;
 	}
-	// returns the number of times the player won
+	/** 
+	*Returns the number of times the player won
+	*/
 	public int getWins() {
 		return wins;
 	}
-	//returns the color of the player
+	/**
+	*Returns the color of the player
+	*/
 	public Color getColor() {
 		return playerCol;
 	}
-	// returns the id
+	/**
+	*Returns the id
+	*/
 	public int getID() {
 		return id;
 	}
