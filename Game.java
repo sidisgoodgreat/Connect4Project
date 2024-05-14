@@ -3,9 +3,15 @@ import java.awt.Color;
 import java.util.Scanner;
 
 public class Game {
+	/**
+ 	*Creates the board and the player instance variables
+  	*/
 	private GUIBoard board;
 	private Player p1,p2;
-	
+
+	/**
+ 	*asks the user which color and sets each player to desired color
+  	*/
 	public Game() {
 		Scanner s = new Scanner(System.in);
 		System.out.println("Choose Color?");
