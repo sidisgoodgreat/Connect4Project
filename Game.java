@@ -1,4 +1,4 @@
-package csaFinal;
+package CSAFinal;
 import java.awt.Color;
 import java.util.Scanner;
 
