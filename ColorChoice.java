@@ -1,4 +1,4 @@
-package csaFinal;
+package CSAFinalProject;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -17,18 +17,13 @@ public class ColorChoice {
 			p2GSlider,
 			p2BSlider;
 	private JButton submitButton;
-	/**
- 	*Main method that creates and initializes the ColorChoice object
-  	*/
-	public static void main(String[] args) {
-		ColorChoice f = new ColorChoice();
-		f.initialize();
-	}
 	
+	public ColorChoice() {
+		initialize();
+	}
 	/**
-	* @wbp.parser.entryPoint
-  	* Initializes the GUI for choosing player colors
-	*/
+	 * @wbp.parser.entryPoint
+	 */
 	public void initialize() {
 		frame = new JFrame();
 		frame.getContentPane().setBackground(Color.WHITE);
@@ -45,7 +40,7 @@ public class ColorChoice {
 				frame.setVisible(false);
 				Player	p1 = new Player(getP1Color(),1),
 						p2 = new Player(getP2Color(),2);
-				GUIBoard2 g = new GUIBoard2(p1,p2);
+				GUIBoard1 g = new GUIBoard1(p1,p2);
 			}
 		});
 		
@@ -55,24 +50,12 @@ public class ColorChoice {
 		frame.setBounds(400,400,450,600);
 		frame.setVisible(true);
 	}
-	/**
-        * Gets the color chosen by Player 1 from slider values
-        * @return The color chosen by Player 1
-        */
 	public Color getP1Color() {
 		return new Color(p1RSlider.getValue(),p1GSlider.getValue(),p1BSlider.getValue());
 	}
-	/**
-        * Gets the color chosen by Player 2 from slider values
-        * @return The color chosen by Player 2
-        */
 	public Color getP2Color() {
 		return new Color(p2RSlider.getValue(),p2GSlider.getValue(),p2BSlider.getValue());
 	}
-	/**
-	* Creates sliders for Red, Green, Blue components of Player 1 to choose their colors
- 	*Sets up listeners to update color preview
-	*/
 	private void p1Sliders() {
 		p1RSlider = new JSlider();
 		p1GSlider = new JSlider();
@@ -121,10 +104,6 @@ public class ColorChoice {
 		
 		
 	}
-	/**
-	* Creates sliders for Red, Green, Blue components of Player 2 to choose their colors
- 	*Sets up listeners to update color preview
-	*/
 	private void p2Sliders() {
 		p2RSlider = new JSlider();
 		p2GSlider = new JSlider();
