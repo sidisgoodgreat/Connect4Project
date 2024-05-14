@@ -1,9 +1,6 @@
 package CSAFinalProject;
 
-import java.awt.EventQueue;
-import java.util.*;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -11,19 +8,14 @@ import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import java.awt.Font;
-import javax.swing.JRadioButton;
 import javax.swing.JLabel;
-import java.awt.Button;
-import javax.swing.ButtonGroup;
 import javax.swing.JToggleButton;
-import javax.swing.JSplitPane;
 
 public class GUIBoard1 implements ActionListener{
 
 	private JFrame frame;
 	private JTextField 	status;
 	private Board b = new Board();
-	private boolean isWin = false;
 	private JLabel[][] displayBoard = new JLabel[6][7];
 	private JButton restart, placePiece;
 	private JToggleButton playerToggle = new JToggleButton();
@@ -33,23 +25,8 @@ public class GUIBoard1 implements ActionListener{
 	//TEMP
 	Player p1; 
 	Player p2;
-	//TEMP
-	
-	/**
-	 * Launch the application.
-	 */
-	/* public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GUIBoard1 window = new GUIBoard1();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	} */
+	private JTextArea P1Score;
+	private JTextArea P2Score;
 
 	/**
 	 * Create the application.
@@ -62,6 +39,7 @@ public class GUIBoard1 implements ActionListener{
 		//Initializing and giving traits to the display features, with the default colors.
 		p1 = new Player(Color.red,1);
 		p2 = new Player(Color.yellow,2);
+		
 		createDisplay();
 		
 	}
@@ -71,7 +49,6 @@ public class GUIBoard1 implements ActionListener{
 		createDisplay();
 	}
 	public void createDisplay() {
-		
 		frame = new JFrame();
 		frame.getContentPane().setFont(new Font("Segoe UI Black", Font.BOLD, 11));
 		frame.setBounds(800, 800, 800, 800);
@@ -85,7 +62,7 @@ public class GUIBoard1 implements ActionListener{
 		status.setColumns(10);
 	
 		playerLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
-		playerLabel.setBounds(513, 32, 298, 96);
+		playerLabel.setBounds(256, 98, 298, 96);
 		frame.getContentPane().add(playerLabel);
 		
 		header = new JLabel("Connect 4!");
@@ -101,21 +78,38 @@ public class GUIBoard1 implements ActionListener{
 				}
 				placePiece.setVisible(false);
 				restart.setVisible(false);
+				playerLabel.setVisible(true);
+				P1Score.setVisible(true);
+				P2Score.setVisible(true);
 			}
 		});
 		placePiece.setFont(new Font("Tahoma", Font.BOLD, 11));
 		placePiece.setBackground(new Color(0, 255, 128));
-		placePiece.setBounds(302, 109, 200, 30);
+		placePiece.setBounds(302, 200, 200, 30);
 		frame.getContentPane().add(placePiece);
 		
 		restart = new JButton("restart Game");
 		restart.setBackground(Color.RED);
-		restart.setBounds(302, 109, 200, 30);
+		restart.setBounds(302, 200, 200, 30);
 		frame.getContentPane().add(restart);
 		
 		playerToggle.setSelected(true);
 		playerToggle.setBounds(62, 98, 161, 29);
 		frame.getContentPane().add(playerToggle);
+		
+		P1Score = new JTextArea();
+		P1Score.setBounds(594, 11, 200, 53);
+		P1Score.setText("Player 2 Score: 0");
+		frame.getContentPane().add(P1Score);
+		
+		P2Score = new JTextArea();
+		P2Score.setBounds(594, 74, 200, 53);
+		P2Score.setText("Player 1 Score: 0");
+		frame.getContentPane().add(P2Score);
+		playerLabel.setVisible(false);
+		playerToggle.setEnabled(false);
+		//P1Score.setVisible(false);
+		//P2Score.setVisible(false);
 		
 		
 		//Creating and setting the board
@@ -184,10 +178,17 @@ public class GUIBoard1 implements ActionListener{
 			status.setText("Player " + (!playerToggle.isSelected()?1:2) + " scored a WIN!");
 			placePiece.setVisible(false);
 			restart.setVisible(true);
-			isWin = true;
 			for(int i = 0; i < buttons.length; i++) {
 				buttons[i].setVisible(false);
 			}
+			playerLabel.setVisible(false);
+			if(!playerToggle.isSelected()) 
+			p1.incWin();
+			else 
+				p2.incWin();
+			P1Score.setText("Player 1 Score: " + p1.getWins());
+			P2Score.setText("Player 2 Score: " + p2.getWins());
+			
 		}
 	}
 	
@@ -203,6 +204,8 @@ public class GUIBoard1 implements ActionListener{
 	}
 	
 	private void initialize() {
+		P1Score.setVisible(false);
+		P2Score.setVisible(false);
 		restart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -212,12 +215,16 @@ public class GUIBoard1 implements ActionListener{
 				b.clearBoard();
 				updateBoard(p1,p2);
 				
-				isWin = false;
 				updatePlayerToggle(coinFlip());
 				restart.setVisible(false);
 				for(int i = 0; i < buttons.length; i++) {
 					buttons[i].setVisible(true);
 				}
+				playerLabel.setVisible(true);
+				P1Score.setVisible(true);
+				P2Score.setVisible(true);
+				P1Score.setText("Player 1 Score: " + p1.getWins());
+				P2Score.setText("Player 2 Score: " + p2.getWins());
 			}
 		});
 		playerToggle.addActionListener(new ActionListener(){
