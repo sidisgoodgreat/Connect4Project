@@ -81,6 +81,11 @@ public class ColorChoice {
 		p1GSlider = new JSlider();
 		p1BSlider = new JSlider();
 		ChangeListener sliderUpdate=new ChangeListener() {
+			/**
+  			*Updates the background color of the p2Color JLabel component 
+      			*to match the color obtained from the getP2Color method
+	 		*@param e
+      			*/
 			public void stateChanged(ChangeEvent e) {
 				// TODO Auto-generated method stub
 				p1Color.setBackground(getP1Color());
