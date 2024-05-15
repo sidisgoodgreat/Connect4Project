@@ -100,10 +100,4 @@ public class Opponent extends Player {
     private boolean isValidPosition(int row, int col) {
         return row >= 0 && row < board.getBoard().length && col >= 0 && col < board.getBoard()[0].length;
     }  
-    /**
- 	*this method algorithimn is the explore different states of the game.
-  	*/
-    public int algorithimn(int depth, int alpha, int beta, boolean maxPlayer) {
-          //This stuf rlly complicated
-    }
 }
