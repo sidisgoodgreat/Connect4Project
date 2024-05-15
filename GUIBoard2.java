@@ -4,36 +4,125 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class GUIBoard2 {
-        // create instance variables of the frame, column, status, the game board, boolean flag, representation of the game board, button for restarting, and button for setting piece.
+import java.awt.EventQueue;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+
+public class GUIBoard2 implements ActionListener{
+
 	private JFrame frame;
-	private JTextField column, status;
+	private JTextField 	status;
 	private Board b = new Board();
-	private boolean isWin = false;
+	private boolean gameMode;
+	private String p2Text;
 	private JLabel[][] displayBoard = new JLabel[6][7];
 	private JButton restart, placePiece;
-	private JToggleButton playerToggle = new JToggleButton();
+	private JToggleButton playerToggle = new JToggleButton();//if it is selected, then it is Player 1
 	private JLabel 	header,
-					columnLabel = new JLabel("Enter column Number:"),
-					playerLabel = new JLabel("Choose the player:");
+					playerLabel = new JLabel("Choose the boxes at the top row to drop a piece!");
+	private JButton[] buttons = new JButton[7];
+	//TEMP
+	Player p1; 
+	Player p2;
+	//TEMP
 	
-	//TEMP
-	Player p1 = new Player(Color.red,1);
-	Player p2 = new Player(Color.yellow,2);
-	//TEMP
+	/**
+	 * Launch the application.
+	 */
+	/* public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					GUIBoard1 window = new GUIBoard1();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	} */
 
 	/**
 	 * Create the application.
 	 */
-	public GUIBoard2(Player p1, Player p2) {
+	/**
+	 * @wbp.parser.constructor
+	 */
+	public GUIBoard2() {
+		
+		//Initializing and giving traits to the display features, with the default colors.
+		p1 = new Player(Color.red,1);
+		p2 = new Player(Color.yellow,2);
+		createDisplay();
+		
+	}
+	public GUIBoard2(Player p1, Player p2, boolean isAi) {
+		this.p1 = p1;
+		this.p2 = p2;
+		this.gameMode = isAi;
+		this.p2Text = isAi?"Computer":"Player 2";
+		createDisplay();
+	}
+
+	public void createDisplay() {
+		
+		frame = new JFrame();
+		frame.getContentPane().setFont(new Font("Segoe UI Black", Font.BOLD, 11));
+		frame.setBounds(800, 800, 800, 800);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		status = new JTextField();
+		status.setFont(new Font("Tahoma", Font.BOLD, 12));
+		status.setBounds(249, 634, 298, 91);
+		frame.getContentPane().add(status);
+		status.setColumns(10);
+	
+		playerLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
+		playerLabel.setBounds(513, 32, 298, 96);
+		frame.getContentPane().add(playerLabel);
+		
+		header = new JLabel("Connect 4!");
+		header.setFont(new Font("Tahoma", Font.BOLD, 40));
+		header.setBounds(288, 11, 266, 68);
+		frame.getContentPane().add(header);
+		
+		placePiece = new JButton("Start Game");
+		placePiece.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for(int i = 0; i < buttons.length; i++) {
+					buttons[i].setVisible(true);
+				}
+				placePiece.setVisible(false);
+				restart.setVisible(false);
+				
+				if (!playerToggle.isSelected()&&gameMode) {
+					b.dropPiece(2, p2.chooseColumn());
+					updateBoard(p1,p2);
+					winCheck();
+					updatePlayerToggle(!playerToggle.isSelected());
+			}
+				
+		}
+		});
+		placePiece.setFont(new Font("Tahoma", Font.BOLD, 11));
+		placePiece.setBackground(new Color(0, 255, 128));
+		placePiece.setBounds(302, 109, 200, 30);
+		frame.getContentPane().add(placePiece);
+		
+		restart = new JButton("restart Game");
+		restart.setBackground(Color.RED);
+		restart.setBounds(302, 109, 200, 30);
+		frame.getContentPane().add(restart);
+		
+		playerToggle.setSelected(true);
+		playerToggle.setBounds(62, 98, 161, 29);
+		frame.getContentPane().add(playerToggle);
+		
+		
 		//Creating and setting the board
-		setup();
 		int x,
-		y = 252;
-		/** 
-                 *Initializes the visual representation of the game board using JLabels. 
-		 *Loops through the displayBoard array to create JLabels for each cell and adds them to the game frame.
-                 */
+			y = 252;
 		for(int r = 0; r < displayBoard.length; r++) {
 			x = 150;
 			for(int c = 0; c < displayBoard[0].length; c++) {
@@ -46,108 +135,45 @@ public class GUIBoard2 {
 			}
 			y+=65;
 		}
-		
-		/** 
-                  *Initializes the game by flipping a coin to determine the first player, updating the player toggle accordingly, and setting up the game interface. 
-		  *@param p1 The first player object. 
-                  *@param p2 The second player object. 
-		  */ 
-		//Flipping a coin to see who goes first		
-		updatePlayerToggle(coinFlip());
-		initialize();
-		
-		this.p1=p1;
-		this.p2=p2;
-		
-		frame.setVisible(true);
-		
+		//create buttons for user to select their desired column
+		int x1 = 150;
+		int y1 = 200;
+			x1 = 150;
+			for(int i = 0; i < buttons.length; i++) {
+				x1 += 55;
+				buttons[i] = new JButton(i+"");
+				buttons[i].setBounds(x1,y1,50,50);
+				frame.getContentPane().add(buttons[i]);
+				buttons[i].addActionListener(this);
+			}
+			y1+=65;
+			for(int i = 0; i < buttons.length; i++) {
+				buttons[i].setVisible(false);
+			}
+			
+			updatePlayerToggle(coinFlip());
+			initialize();
+			frame.setVisible(true); //displays the board
 	}
 	
-	private void setup() {
-		//Initializing and giving traits to the display features
-				frame = new JFrame();
-				frame.getContentPane().setFont(new Font("Segoe UI Black", Font.BOLD, 11));
-				frame.setBounds(800, 800, 800, 800);
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.getContentPane().setLayout(null);
-
-		 	        // Create and configure the column text field
-				column = new JTextField();
-				column.setBounds(562, 98, 126, 49);
-				frame.getContentPane().add(column);
-				column.setColumns(10);
-
-				// Create and configure the status text field
-				status = new JTextField();
-				status.setFont(new Font("Tahoma", Font.BOLD, 12));
-				status.setBounds(249, 634, 298, 91);
-				frame.getContentPane().add(status);
-				status.setColumns(10);
-				   
-				// Create and configure the column label
-				columnLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
-				columnLabel.setBounds(91, 61, 126, 38);
-				frame.getContentPane().add(columnLabel);
-
-				// Create and configure the player label
-				playerLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
-				playerLabel.setBounds(563, 56, 136, 49);
-				frame.getContentPane().add(playerLabel);
-
-			        // Create and configure the header label
-				header = new JLabel("Connect 4!");
-				header.setFont(new Font("Tahoma", Font.BOLD, 40));
-				header.setBounds(288, 11, 266, 68);
-				frame.getContentPane().add(header);
-
-		  	        // Create and configure the place piece button
-				placePiece = new JButton("Place Piece");
-				placePiece.setFont(new Font("Tahoma", Font.BOLD, 11));
-				placePiece.setBackground(new Color(0, 255, 128));
-				placePiece.setBounds(302, 211, 200, 30);
-				frame.getContentPane().add(placePiece);
-
-			        // Create and configure the restart button
-				restart = new JButton("Restart Game");
-				restart.setFont(new Font("Tahoma", Font.BOLD, 11));
-				restart.setBackground(Color.RED);
-				restart.setBounds(302, 212, 200, 29);
-				frame.getContentPane().add(restart);
-				
-				// Configure and set the default state of the player toggle button
-				playerToggle.setSelected(true);
-				playerToggle.setBounds(62, 98, 161, 29);
-				frame.getContentPane().add(playerToggle);
-	}
-	/**
- 	  *Simulates a coin flip and returns the result.
-	  *@return true if the result of the coin flip is heads, return false if it's tails.
- 	  */
+	
 	private boolean coinFlip() {
-		return (int)Math.random()*2==1;
+		return (int)(Math.random() * 2)==1;
 	}
-	/**
-	  * Updates the visual representation of the game board based on the current state of the game.
- 	  * @param p1 The first player object.
-	  * @param p2 The second player object.
-	  */
+	
 	private void updateBoard(Player p1, Player p2) {
 		for(int row=0;row<b.getBoard().length;row++) {
 			for(int column=0;column<b.getBoard()[0].length;column++) {
-				int point = b.getBoard()[row][column];
-				displayBoard[row][column].setBackground(
-						(point==p1.getID())?p1.getColor():
-						(point==p2.getID()?p2.getColor():Color.white));
+					int point = b.getBoard()[row][column];
+					displayBoard[row][column].setBackground(
+					(point==p1.getID())?p1.getColor():
+					(point==p2.getID()?p2.getColor():Color.white));
 			}
 		}
 	}
-	/**
-	  * Updates the player toggle button based on the initial player turn.
- 	  * @param init if it's Player 1's turn, select false if it's Player 2's turn.
-	  */
 	private void updatePlayerToggle(boolean init) {
 		playerToggle.setSelected(init);
-		playerToggle.setText((init?"Player 1":"Player 2"));
+		playerToggle.setText(init?"Player 1":p2Text);
 	}
 	/**
 	 * Initialize the contents of the frame.
@@ -157,67 +183,68 @@ public class GUIBoard2 {
 		if(b.winCheckAll() > 0) {
 			//color set:
 			status.setBackground(Color.GREEN);
-			status.setText("Player " + (playerToggle.isSelected()?1:2) + " scored a WIN!");
+			status.setText(!playerToggle.isSelected()?"Player 1":p2Text + " scored a WIN!");
 			placePiece.setVisible(false);
 			restart.setVisible(true);
-			isWin = true;
+			for(int i = 0; i < buttons.length; i++) {
+				buttons[i].setVisible(false);
+			}
 		}
 	}
- /**
- * Initializes the game by setting up action listeners for the "Place Piece" button and handling player turns, dropping pieces, updating the game board, 
- * checking for a win condition, and displaying error messages if any.
- */
-	private void initialize() {
-		placePiece.addActionListener(new ActionListener() {
-		
-			public void actionPerformed(ActionEvent e) {
-				restart.setVisible(false); 
-				if(!isWin) {
-					try {
-						status.setText("");
-						status.setBackground(Color.white);
-						b.dropPiece(playerToggle.isSelected()?1:2, 
-								Integer.valueOf(column.getText()));
-								
-						updateBoard(p1,p2);
-				
-						b.print();
-						updatePlayerToggle(!playerToggle.isSelected());
-						
-						winCheck();
-						
-					}catch(Exception a) {
-						status.setText("ERROR!");
-						status.setBackground(Color.red);
-					}
-				}
-				column.setText("");
-			}
-		});
 	
-		/**
- 		  * Adds action listeners for the "Restart" button and player toggle button.
-		  */
+	public void AIMode(int i) {
+		Timer t = new Timer();
+		dropPieceStuff(p1.getID(),i);
+		t.schedule(new TimerTask() {
+			public void run() {
+				dropPieceStuff(p2.getID(),p2.chooseColumn());
+			}	
+		}, 500);
+		
+	}
+	public void dropPieceStuff(int id, int col) {
+		b.dropPiece(id,col);
+		updateBoard(p1,p2);
+		winCheck();
+		updatePlayerToggle(!playerToggle.isSelected());
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		for(int i=0;i<buttons.length;i++) {
+			if(e.getSource()==buttons[i]) {
+				if (!gameMode) {
+					dropPieceStuff(playerToggle.isSelected()?1:2,i);
+				}
+				
+				else {
+					AIMode(i);
+				}
+
+			}
+		}
+	}
+		
+	
+	
+	private void initialize() {
 		restart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				restart.setVisible(false);
-				placePiece.setVisible(true);
 				status.setText("");
 				status.setBackground(Color.WHITE);
 				
-				b.clearBoard(); //clears board
-				updateBoard(p1,p2); //updates board
-				
-				isWin = false;
 				updatePlayerToggle(coinFlip());
-			}
-		});
-		// Adds an action listener for the player toggle button to update its text
+				restart.setVisible(false);
+				for(int i = 0; i < buttons.length; i++) {
+					buttons[i].setVisible(true);
+				}
+				b.clearBoard();
+				updateBoard(p1,p2);
+		}});
 		playerToggle.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				// Sets the text of the player toggle button based on the selected player
-				playerToggle.setText((playerToggle.isSelected()?"Player 1":"Player 2"));
+				updatePlayerToggle(playerToggle.isSelected());
 			}
 		});
+		
 	}//End Method
 }
