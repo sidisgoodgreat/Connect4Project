@@ -1,6 +1,4 @@
 package CSAFinalProject;
-
-
 public class Board {
 	private int[][] board;
 	/**
@@ -48,6 +46,13 @@ public class Board {
 		}
 		return false;
 	}
+	
+	public int fullColumn(int i) {
+			if(board[0][i]==1 || board[0][i]==2) {
+				return i;
+			}
+		return -1;
+	}
 	/**
  	*Checks for win across entire board by calling winCheck method for all possible directons. 
   	*Returns winNum if there is a win or else returns -1.
@@ -61,9 +66,6 @@ public class Board {
 		}
 		return -1;
 	}
-	/**
- 	*Checks for a win in a specific direction on the board
-  	*/
 	public int winCheck(int id) {
 		/*
 		 * 1: Horizontal
@@ -84,9 +86,6 @@ public class Board {
 		}
 		return -1;
 	}
-	/** 
-	*Helper method where winCheck checks for a win recursively in a specified direction
-	*/
 	private boolean recWin(int row, int column, int value, int count,int id) {
 		if(count==4) {
 			return true;
@@ -98,5 +97,16 @@ public class Board {
 		}else {
 			return false;
 		}
+	}
+	public int[][] getBoard() {
+		return board;
+	}
+	public void clearBoard() {
+		for (int i=0; i<board.length; i++) {
+			for (int j=0; j<board[i].length; j++) {
+				board[i][j]=0;
+			}
+		}
+		
 	}
 }
