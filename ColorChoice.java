@@ -46,7 +46,7 @@ public class ColorChoice {
 				frame.setVisible(false);
 				Player	p1 = new Player(getP1Color(),1),
 						p2 = new Player(getP2Color(),2);
-				GUIBoard g = new GUIBoard(p1,p2,false);
+				GUIBoard1 g = new GUIBoard1(p1,p2,false);
 				
 			}
 		});
