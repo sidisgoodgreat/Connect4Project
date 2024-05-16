@@ -1,56 +1,80 @@
 package CSAFinalProject;
 
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.Color;
-import javax.swing.JTextField;
-import javax.swing.JTextArea;
-import java.awt.Font;
-import javax.swing.JLabel;
-import javax.swing.JToggleButton;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-public class GUIBoard1 implements ActionListener{
+import java.awt.EventQueue;
+import java.util.*;
+import java.util.Timer;
+import java.util.concurrent.TimeUnit;
+
+public class GUIBoard implements ActionListener{
 
 	private JFrame frame;
 	private JTextField 	status;
+	private JTextField score1;
+	private JTextField score2;
+	
+	private int scoreOfOne;
+	private int scoreOfTwo ; 
+	
 	private Board b = new Board();
+	private boolean gameMode;
+	private String p2Text;
 	private JLabel[][] displayBoard = new JLabel[6][7];
 	private JButton restart, placePiece;
-	private JToggleButton playerToggle = new JToggleButton();
+	private JToggleButton playerToggle = new JToggleButton();//if it is selected, then it is Player 1
 	private JLabel 	header,
 					playerLabel = new JLabel("Choose the boxes at the top row to drop a piece!");
 	private JButton[] buttons = new JButton[7];
 	//TEMP
 	Player p1; 
 	Player p2;
-	private JTextArea P1Score;
-	private JTextArea P2Score;
+	//TEMP
+	
+	/**
+	 * Launch the application.
+	 */
+	/* public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					GUIBoard1 window = new GUIBoard1();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	} */
 
 	/**
 	 * Create the application.
 	 */
 	/**
 	 * @wbp.parser.constructor
-  	*Constructs a GUI1 Board object
 	 */
-	public GUIBoard1() {
+	public GUIBoard() {
 		
 		//Initializing and giving traits to the display features, with the default colors.
 		p1 = new Player(Color.red,1);
 		p2 = new Player(Color.yellow,2);
-		
 		createDisplay();
 		
 	}
-	
-	public GUIBoard1(Player p1, Player p2) {
+	public GUIBoard(Player p1, Player p2, boolean isAi) {
 		this.p1 = p1;
 		this.p2 = p2;
+		this.gameMode = isAi;
+		this.p2Text = isAi?"Computer":"Player 2";
 		createDisplay();
+		scoreOfOne = 0;
+		scoreOfTwo = 0;
 	}
+
 	public void createDisplay() {
+		
 		frame = new JFrame();
 		frame.getContentPane().setFont(new Font("Segoe UI Black", Font.BOLD, 11));
 		frame.setBounds(800, 800, 800, 800);
@@ -58,13 +82,27 @@ public class GUIBoard1 implements ActionListener{
 		frame.getContentPane().setLayout(null);
 		
 		status = new JTextField();
+		score1 = new JTextField();
+		score2 = new JTextField();
+		
 		status.setFont(new Font("Tahoma", Font.BOLD, 12));
 		status.setBounds(249, 634, 298, 91);
 		frame.getContentPane().add(status);
 		status.setColumns(10);
+		
+		score1.setFont(new Font("Tahoma",Font.BOLD,12));
+		score1.setBounds(600,140,135,45);
+		frame.getContentPane().add(score1);
+		score1.setColumns(5);
+		
+		score2.setFont(new Font("Tahoma",Font.BOLD,12));
+		score2.setBounds(600,180,135,45);
+		frame.getContentPane().add(score2);
+		score2.setColumns(5);
+		
 	
 		playerLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
-		playerLabel.setBounds(256, 98, 298, 96);
+		playerLabel.setBounds(513, 32, 298, 96);
 		frame.getContentPane().add(playerLabel);
 		
 		header = new JLabel("Connect 4!");
@@ -80,38 +118,29 @@ public class GUIBoard1 implements ActionListener{
 				}
 				placePiece.setVisible(false);
 				restart.setVisible(false);
-				playerLabel.setVisible(true);
-				P1Score.setVisible(true);
-				P2Score.setVisible(true);
+				
+				if (!playerToggle.isSelected()&&gameMode) {
+					b.dropPiece(2, p2.chooseColumn());
+					updateBoard(p1,p2);
+					winCheck();
+					updatePlayerToggle(!playerToggle.isSelected());
 			}
+				
+		}
 		});
 		placePiece.setFont(new Font("Tahoma", Font.BOLD, 11));
 		placePiece.setBackground(new Color(0, 255, 128));
-		placePiece.setBounds(302, 200, 200, 30);
+		placePiece.setBounds(302, 109, 200, 30);
 		frame.getContentPane().add(placePiece);
 		
 		restart = new JButton("restart Game");
 		restart.setBackground(Color.RED);
-		restart.setBounds(302, 200, 200, 30);
+		restart.setBounds(302, 109, 200, 30);
 		frame.getContentPane().add(restart);
 		
 		playerToggle.setSelected(true);
 		playerToggle.setBounds(62, 98, 161, 29);
 		frame.getContentPane().add(playerToggle);
-		
-		P1Score = new JTextArea();
-		P1Score.setBounds(594, 11, 200, 53);
-		P1Score.setText("Player 2 Score: 0");
-		frame.getContentPane().add(P1Score);
-		
-		P2Score = new JTextArea();
-		P2Score.setBounds(594, 74, 200, 53);
-		P2Score.setText("Player 1 Score: 0");
-		frame.getContentPane().add(P2Score);
-		playerLabel.setVisible(false);
-		playerToggle.setEnabled(false);
-		//P1Score.setVisible(false);
-		//P2Score.setVisible(false);
 		
 		
 		//Creating and setting the board
@@ -144,13 +173,23 @@ public class GUIBoard1 implements ActionListener{
 			for(int i = 0; i < buttons.length; i++) {
 				buttons[i].setVisible(false);
 			}
-		
-		//Flipping a coin to see who goes first
-		updatePlayerToggle(coinFlip());
-		initialize();
-		frame.setVisible(true); //displays the board
+			
+			updatePlayerToggle(coinFlip());
+			initialize();
+			frame.setVisible(true); //displays the board
+			
+			score1.setText("Player 1 Score: " + scoreOfOne);
+			score2.setText(p2Text + " Score: " + scoreOfTwo);
+			
+			
 	}
 	
+	public void startsWithComputer() {
+		if (playerToggle.getText().equals("Computer")) {
+			dropPieceStuff(p2.getID(),p2.chooseColumn());
+			updateBoard(p1,p2);
+		}
+	}
 	private boolean coinFlip() {
 		return (int)(Math.random() * 2)==1;
 	}
@@ -158,16 +197,16 @@ public class GUIBoard1 implements ActionListener{
 	private void updateBoard(Player p1, Player p2) {
 		for(int row=0;row<b.getBoard().length;row++) {
 			for(int column=0;column<b.getBoard()[0].length;column++) {
-				int point = b.getBoard()[row][column];
-				displayBoard[row][column].setBackground(
-						(point==p1.getID())?p1.getColor():
-						(point==p2.getID()?p2.getColor():Color.white));
+					int point = b.getBoard()[row][column];
+					displayBoard[row][column].setBackground(
+					(point==p1.getID())?p1.getColor():
+					(point==p2.getID()?p2.getColor():Color.white));
 			}
 		}
 	}
 	private void updatePlayerToggle(boolean init) {
 		playerToggle.setSelected(init);
-		playerToggle.setText((init?"Player 1":"Player 2"));
+		playerToggle.setText(init?"Player 1":p2Text);
 	}
 	/**
 	 * Initialize the contents of the frame.
@@ -177,61 +216,91 @@ public class GUIBoard1 implements ActionListener{
 		if(b.winCheckAll() > 0) {
 			//color set:
 			status.setBackground(Color.GREEN);
-			status.setText("Player " + (!playerToggle.isSelected()?1:2) + " scored a WIN!");
+			status.setText((playerToggle.isSelected()?"Player 1":p2Text)+ " scored a WIN!");
+			if (playerToggle.isSelected()) {
+				scoreOfOne++;
+				score1.setText("Player 1 Score: " + scoreOfOne);
+			}
+			else {
+				scoreOfTwo++;
+				score2.setText(p2Text + " Score: " + scoreOfTwo);
+			}
 			placePiece.setVisible(false);
 			restart.setVisible(true);
 			for(int i = 0; i < buttons.length; i++) {
 				buttons[i].setVisible(false);
 			}
-			playerLabel.setVisible(false);
-			if(!playerToggle.isSelected()) 
-			p1.incWin();
-			else 
-				p2.incWin();
-			P1Score.setText("Player 1 Score: " + p1.getWins());
-			P2Score.setText("Player 2 Score: " + p2.getWins());
-			
 		}
+	}
+	
+	public void AIMode(int i) {
+		Timer t = new Timer();
+		dropPieceStuff(p1.getID(),i);
+		for(int j = 0; j < buttons.length; j++) {
+			buttons[j].setEnabled(false);
+		}
+		if (b.winCheckAll()<0) {
+		t.schedule(new TimerTask() {
+			public void run() {
+				dropPieceStuff(p2.getID(),p2.chooseColumn());
+				for(int x = 0; x < buttons.length; x++) {
+					if (b.fullColumn(x)==-1) {
+						buttons[x].setEnabled(true);
+					}
+					else {
+						buttons[x].setEnabled(false);
+					}
+				}
+			}	
+		}, 500);
+		}
+	}
+	
+	public void dropPieceStuff(int id, int col) {
+		b.dropPiece(id,col);
+		updateBoard(p1,p2);
+		winCheck();
+		updatePlayerToggle(!playerToggle.isSelected());
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		for(int i=0;i<buttons.length;i++) {
 			if(e.getSource()==buttons[i]) {
-				b.dropPiece(playerToggle.isSelected()?1:2, i);
-				updateBoard(p1,p2);
-				updatePlayerToggle(!playerToggle.isSelected());
-				winCheck();
+				if (!gameMode) {
+					dropPieceStuff(playerToggle.isSelected()?1:2,i);
+				}
+				
+				else {
+					AIMode(i);
+				}
+
 			}
 		}
 	}
+		
+	
 	
 	private void initialize() {
-		P1Score.setVisible(false);
-		P2Score.setVisible(false);
 		restart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				status.setText("");
 				status.setBackground(Color.WHITE);
-				
-				b.clearBoard();
-				updateBoard(p1,p2);
 				
 				updatePlayerToggle(coinFlip());
 				restart.setVisible(false);
 				for(int i = 0; i < buttons.length; i++) {
+					buttons[i].setEnabled(true);
 					buttons[i].setVisible(true);
 				}
-				playerLabel.setVisible(true);
-				P1Score.setVisible(true);
-				P2Score.setVisible(true);
-				P1Score.setText("Player 1 Score: " + p1.getWins());
-				P2Score.setText("Player 2 Score: " + p2.getWins());
-			}
-		});
+				b.clearBoard();
+				startsWithComputer();
+				updateBoard(p1,p2);
+
+				
+		}});
 		playerToggle.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				playerToggle.setText((playerToggle.isSelected()?"Player 1":"Player 2"));
+				updatePlayerToggle(playerToggle.isSelected());
 			}
 		});
 		
