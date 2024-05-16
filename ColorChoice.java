@@ -8,7 +8,7 @@ import javax.swing.event.ChangeListener;
 
 public class ColorChoice {
 	private JFrame frame;
-	
+		
 	private JLabel p1Color,p2Color;
 	private JSlider p1RSlider,
 			p1GSlider,
@@ -18,12 +18,15 @@ public class ColorChoice {
 			p2BSlider;
 	private JButton submitButton;
 	
-	public ColorChoice() {
-		initialize();
-	}
+//	public static void main(String[] args) {
+//		ColorChoice f = new ColorChoice();
+//		f.initialize();
+//	}
+	
+
+	
 	/**
 	 * @wbp.parser.entryPoint
-  	* Initializes the GUI for choosing player colors
 	 */
 	public void initialize() {
 		frame = new JFrame();
@@ -34,21 +37,17 @@ public class ColorChoice {
 		submitButton = new JButton("Submit");
 		submitButton.setBounds(183, 66, 117, 29);
 		frame.getContentPane().add(submitButton);
-
+		
+			
     //This right here, when the submit button is pressed, the GUIBoard(otherwise the game) is started up
 		submitButton.addActionListener(new ActionListener() {
-			/**
-			 * Performs an action when an event is triggered
-			 * Hides the current frame and creates Player objects with
-			 * colors obtained from user selections, and initializes a new instance of the
-			 * GUIBoard1 class with the specified players.
-			 * @param e 
-			 */
 			public void actionPerformed(ActionEvent e) {
+				
 				frame.setVisible(false);
 				Player	p1 = new Player(getP1Color(),1),
 						p2 = new Player(getP2Color(),2);
-				GUIBoard1 g = new GUIBoard1(p1,p2);
+				GUIBoard g = new GUIBoard(p1,p2,false);
+				
 			}
 		});
 		
@@ -58,34 +57,17 @@ public class ColorChoice {
 		frame.setBounds(400,400,450,600);
 		frame.setVisible(true);
 	}
-	/**
-        * Gets the color chosen by Player 1 from slider values
-        * @return The color chosen by Player 1
-        */
 	public Color getP1Color() {
 		return new Color(p1RSlider.getValue(),p1GSlider.getValue(),p1BSlider.getValue());
 	}
-	/**
-        * Gets the color chosen by Player 2 from slider values
-        * @return The color chosen by Player 2
-        */
 	public Color getP2Color() {
 		return new Color(p2RSlider.getValue(),p2GSlider.getValue(),p2BSlider.getValue());
 	}
-	/**
-	* Creates sliders for Red, Green, Blue components of Player 1 to choose their colors
- 	*Sets up listeners to update color preview
-	*/
 	private void p1Sliders() {
 		p1RSlider = new JSlider();
 		p1GSlider = new JSlider();
 		p1BSlider = new JSlider();
 		ChangeListener sliderUpdate=new ChangeListener() {
-			/**
-  			*Updates the background color of the p2Color JLabel component 
-      			*to match the color obtained from the getP2Color method
-	 		*@param e
-      			*/
 			public void stateChanged(ChangeEvent e) {
 				// TODO Auto-generated method stub
 				p1Color.setBackground(getP1Color());
@@ -129,10 +111,6 @@ public class ColorChoice {
 		
 		
 	}
-	/**
-	* Creates sliders for Red, Green, Blue components of Player 2 to choose their colors
- 	*Sets up listeners to update color preview
-	*/
 	private void p2Sliders() {
 		p2RSlider = new JSlider();
 		p2GSlider = new JSlider();
