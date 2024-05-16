@@ -21,11 +21,7 @@ public class Opponent extends Player {
  	*chooses the columnn based on the randomMove method
   	*/
     public int chooseColumn() {
-        int strategicMove = findStrategicMove();
-        if (strategicMove != -1) {
-            return strategicMove;
-        }
-        return randomMove();
+        return (int) (Math.random()*7);
     }
 
     /**
